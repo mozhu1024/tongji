@@ -20,11 +20,8 @@ func main() {
 		port = "8080"
 	}
 
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("ADDR") + ":6379",
-		Password: os.Getenv("PASSWORD"),
-		DB:       0,
-	})
+	opt, _ := redis.ParseURL(fmt.Sprintf("redis://:%s@%s:6379", os.Getenv("PASSWORD"), os.Getenv("ADDR")))
+	rdb := redis.NewClient(opt)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_id := r.URL.Query().Get("id")
